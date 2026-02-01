@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: mart_attributed_revenue
+    description: |
+      Core attribution mart. For each converted user's touchpoint journey,
+      calculates revenue credit under 5 attribution models and aggregates
+      by channel, campaign, and date.
+    columns:
+      - name: event_date
+        description: "Date of the marketing touchpoint"
+        tests:
+          - not_null
+      - name: channel
+        description: "Marketing channel"
+        tests:
+          - not_null
+      - name: converted_users
+        description: "Number of unique users who converted via this touchpoint"
+      - name: revenue_linear
+        description: "Revenue attributed using linear (equal weight) model"
+      - name: revenue_time_decay
+        description: "Revenue attributed using time-decay model (7-day half-life)"
+      - name: revenue_u_shaped
+        description: "Revenue attributed using U-shaped (40/40/20) model"
+
+  - name: mart_roas_by_channel
+    description: |
+      Joins attributed revenue to actual ad spend to produce ROAS,
+      CPM, and CPA metrics across all attribution models.
+      The primary reporting/dashboard source table.
+    columns:
+      - name: report_date
+        tests:
+          - not_null
+      - name: channel
+        tests:
+          - not_null
+      - name: total_spend
+        description: "Total ad spend in USD for this channel/campaign/date"
+      - name: roas_linear
+        description: "Return on ad spend using linear attribution as baseline"
+      - name: cpa_linear
+        description: "Cost per acquisition using linear attribution"

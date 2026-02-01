@@ -1,0 +1,65 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: raw_events
+        description: "Raw marketing touchpoint event log"
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+        loaded_at_field: event_timestamp
+      - name: conversions
+        description: "User conversion events with order value"
+      - name: ad_spend
+        description: "Daily ad spend by channel and campaign"
+
+models:
+  - name: stg_raw_events
+    description: "Cleaned and cast raw event log with derived date fields"
+    columns:
+      - name: session_id
+        description: "Unique session identifier"
+        tests:
+          - not_null
+      - name: user_id
+        description: "Anonymous user identifier"
+        tests:
+          - not_null
+      - name: channel
+        description: "Marketing channel (e.g. paid_search, email)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['paid_search', 'organic_search', 'email', 'social_media', 'direct', 'referral', 'paid_social']
+      - name: event_timestamp
+        tests:
+          - not_null
+
+  - name: stg_conversions
+    description: "Filtered to converted users only with cleaned order values"
+    columns:
+      - name: user_id
+        tests:
+          - not_null
+          - unique
+      - name: order_value
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_raw_events')
+              field: user_id
+
+  - name: stg_ad_spend
+    description: "Daily spend aggregated by channel and campaign"
+    columns:
+      - name: spend_date
+        tests:
+          - not_null
+      - name: channel
+        tests:
+          - not_null
+      - name: spend_usd
+        tests:
+          - not_null
