@@ -3,9 +3,9 @@
 
 select
     user_id,
-    cast(conversion_timestamp as timestamp_ntz) as conversion_timestamp,
-    cast(conversion_timestamp as date) as conversion_date,
-    cast(order_value as float) as order_value
+    cast(conversion_timestamp as TIMESTAMP) as conversion_timestamp,
+    cast(conversion_timestamp as DATE) as conversion_date,
+    cast(order_value as FLOAT64) as order_value
 
 from {{ source('raw', 'conversions') }}
 

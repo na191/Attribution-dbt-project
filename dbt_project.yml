@@ -2,7 +2,7 @@ name: marketing_attribution
 version: '1.0.0'
 config-version: 2
 
-profile: 'snowflake_attribution'
+profile: 'marketing_attribution'
 
 model-paths: ["models"]
 seed-paths: ["seeds"]

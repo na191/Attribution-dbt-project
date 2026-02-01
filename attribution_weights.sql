@@ -29,7 +29,7 @@
             -- Raw weight: 2^(-(days_to_conversion / 7))
             -- Normalization happens in the mart layer via window function
             power(2, -1.0 * (
-                datediff('day', event_timestamp, conversion_timestamp)
+                DATE_DIFF(conversion_timestamp, event_timestamp, DAY)
             ) / 7.0)
 
         when '{{ model_type }}' = 'u_shaped' then

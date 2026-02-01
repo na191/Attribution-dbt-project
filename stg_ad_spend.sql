@@ -2,11 +2,11 @@
 -- Cleans the daily ad spend table
 
 select
-    cast(spend_date as date) as spend_date,
+    cast(spend_date as DATE) as spend_date,
     lower(trim(channel)) as channel,
     lower(trim(campaign)) as campaign,
-    cast(spend_usd as float) as spend_usd,
-    cast(impressions as integer) as impressions,
+    cast(spend_usd as FLOAT64) as spend_usd,
+    cast(impressions as INT64) as impressions,
 
     -- Derived: CPM
     case
